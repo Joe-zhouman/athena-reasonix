@@ -169,24 +169,35 @@ Reasonix 本身是跨平台的，但本仓库**只针对 Windows 桌面端做验
 
 ### 安装 athena-reasonix
 
-**推荐 —— 一键安装脚本**（clone + 注入纪律 + 自检）：
+**一行命令 —— 拉取安装脚本直接跑**（无需先 clone；脚本自己会 clone 仓库）：
 
 ```powershell
-# Windows（PowerShell 5.1+）
-powershell -ExecutionPolicy Bypass -File install.ps1
+# Windows（PowerShell 5.1+）—— 经 jsDelivr CDN 拉脚本，从 GitCode clone
+powershell -NoProfile -ExecutionPolicy Bypass -c "iwr 'https://cdn.jsdelivr.net/gh/Joe-zhouman/athena-reasonix@master/install/install.ps1' | iex"
 ```
 
 ```bash
 # Linux / macOS
-bash install.sh
+bash -c "$(curl -fsSL https://cdn.jsdelivr.net/gh/Joe-zhouman/athena-reasonix@master/install/install.sh)"
 ```
 
-安装脚本会 clone 到 `~/.reasonix/skills/athena/`，并把 skill 优先的纪律**注入** `~/.reasonix/AGENTS.md`（Reasonix 的全局 session-start memory）。**绝不覆盖**你的 AGENTS.md —— 它靠标记块幂等合并/替换，其余内容一字不动。参数（`-Update`、`-NoCheck`、`-SkipServer`）和跨工具注意事项见 [`install/README.md`](install/README.md)。
+安装脚本会 clone 到 `~/.reasonix/skills/athena/`，并把 skill 优先的纪律**注入** `~/.reasonix/AGENTS.md`（Reasonix 的全局 session-start memory）。**绝不覆盖**你的 AGENTS.md —— 它靠 `<athena>…</athena>` 标签块幂等合并/替换，其余内容一字不动。
 
-**手动安装**（如果你更想自己控制）：
+**为什么用 jsDelivr + GitCode？** 安装脚本从 jsDelivr 拉取（镜像 GitHub raw，国内快、返回纯文本）；仓库默认从 GitCode（`gitcode.com`）clone，同样国内快。想用 GitHub 的话，传 `-RepoURL` / `--repo-url` 覆盖。
+
+参数（`-Update`、`-NoCheck`、`-SkipServer`、`-RepoURL`）和跨工具注意事项见 [`install/README.md`](install/README.md)。
+
+**如果你已经 clone 了仓库** —— 直接跑本地脚本：
 
 ```sh
-git clone https://github.com/Joe-zhouman/athena-reasonix.git ~/.reasonix/skills/athena
+powershell -NoProfile -ExecutionPolicy Bypass -File install/install.ps1   # Windows
+bash install/install.sh                                                    # Linux/macOS
+```
+
+**手动安装**（不用安装脚本）：
+
+```sh
+git clone https://gitcode.com/Joe-zhouman/athena-reasonix.git ~/.reasonix/skills/athena
 # 然后自行把仓库的 AGENTS.md 内容合并进 ~/.reasonix/AGENTS.md
 # （或只为注入这一步跑一次 install.ps1）。
 ```

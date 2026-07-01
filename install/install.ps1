@@ -25,7 +25,8 @@
 param(
   [switch]$SkipServer,
   [switch]$NoCheck,
-  [switch]$Update
+  [switch]$Update,
+  [string]$RepoURL = "https://gitcode.com/Joe-zhouman/athena-reasonix.git"
 )
 
 $ErrorActionPreference = "Stop"
@@ -49,7 +50,6 @@ function Invoke-Git {
   return $LASTEXITCODE
 }
 
-$RepoURL = "https://github.com/Joe-zhouman/athena-reasonix.git"
 $Home_ = $HOME
 $RxHome = Join-Path $Home_ ".reasonix"
 $SkillsDir = Join-Path $RxHome "skills"

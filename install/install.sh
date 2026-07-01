@@ -14,7 +14,7 @@
 
 set -euo pipefail
 
-REPO_URL="https://github.com/Joe-zhouman/athena-reasonix.git"
+REPO_URL="https://gitcode.com/Joe-zhouman/athena-reasonix.git"
 RX_HOME="${HOME}/.reasonix"
 SKILLS_DIR="${RX_HOME}/skills"
 TARGET="${SKILLS_DIR}/athena"
@@ -22,11 +22,12 @@ AGENTS_FILE="${RX_HOME}/AGENTS.md"
 
 UPDATE=0
 RUN_CHECK=1
-for arg in "$@"; do
-  case "$arg" in
-    --update|-u) UPDATE=1 ;;
-    --no-check) RUN_CHECK=0 ;;
-    *) echo "unknown arg: $arg" >&2; exit 2 ;;
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --update|-u) UPDATE=1; shift ;;
+    --no-check) RUN_CHECK=0; shift ;;
+    --repo-url) REPO_URL="$2"; shift 2 ;;
+    *) echo "unknown arg: $1" >&2; exit 2 ;;
   esac
 done
 

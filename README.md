@@ -169,26 +169,36 @@ Custom commands for manual user invocation only (not auto-triggered by the model
 
 ### Install athena-reasonix
 
-**Recommended — one-shot installer** (clones + injects the discipline + self-checks):
+**One-liner — fetch the installer and run it** (no clone needed first; the script clones the repo itself):
 
 ```powershell
-# Windows (PowerShell 5.1+)
-powershell -ExecutionPolicy Bypass -File install.ps1
+# Windows (PowerShell 5.1+) — fetch via jsDelivr CDN, clone from GitCode
+powershell -NoProfile -ExecutionPolicy Bypass -c "iwr 'https://cdn.jsdelivr.net/gh/Joe-zhouman/athena-reasonix@master/install/install.ps1' | iex"
 ```
 
 ```bash
 # Linux / macOS
-bash install.sh
+bash -c "$(curl -fsSL https://cdn.jsdelivr.net/gh/Joe-zhouman/athena-reasonix@master/install/install.sh)"
 ```
 
-The installer clones into `~/.reasonix/skills/athena/` and **injects** the skill-first discipline into `~/.reasonix/AGENTS.md` (Reasonix's global session-start memory). It never overwrites your AGENTS.md — it merges a marked block in/out idempotently. See [`install/README.md`](install/README.md) for flags (`-Update`, `-NoCheck`, `-SkipServer`) and the cross-tool warning.
+The installer clones into `~/.reasonix/skills/athena/` and **injects** the skill-first discipline into `~/.reasonix/AGENTS.md` (Reasonix's global session-start memory). It never overwrites your AGENTS.md — it merges the `<athena>…</athena>` block in/out idempotently.
 
-**Manual** (if you prefer):
+**Why jsDelivr + GitCode?** The installer script is fetched from jsDelivr (mirrors GitHub raw, fast in China, returns clean text). The repo itself clones from GitCode (`gitcode.com`) by default — also fast in China. Pass `-RepoURL` / `--repo-url` to point at GitHub if you prefer.
+
+See [`install/README.md`](install/README.md) for flags (`-Update`, `-NoCheck`, `-SkipServer`, `-RepoURL`) and the cross-tool warning.
+
+**If you already cloned the repo** — just run the local script:
 
 ```sh
-git clone https://github.com/Joe-zhouman/athena-reasonix.git ~/.reasonix/skills/athena
-# Then copy the repo's AGENTS.md content into ~/.reasonix/AGENTS.md yourself
-# (or run install.ps1 just for the injection step).
+powershell -NoProfile -ExecutionPolicy Bypass -File install/install.ps1   # Windows
+bash install/install.sh                                                    # Linux/macOS
+```
+
+**Manual** (no installer):
+
+```sh
+git clone https://gitcode.com/Joe-zhouman/athena-reasonix.git ~/.reasonix/skills/athena
+# Then merge the install/athena-block.md block into ~/.reasonix/AGENTS.md yourself.
 ```
 
 Reasonix auto-discovers skills under `.reasonix/skills/` — directory-layout skills (`<name>/SKILL.md`) are always recognized.
