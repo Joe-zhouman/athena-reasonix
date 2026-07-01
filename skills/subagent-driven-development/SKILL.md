@@ -140,7 +140,7 @@ If scorpio approves, dispatch taurus once against the full diff.
 Dispatch bare — no prompt template. The agent's own definition carries the discipline. Pass only task-specific data:
 
 **Per-task:**
-- **capricorn**: `run_skill({name: "capricorn", arguments: "Implement Task N: <name>\n\n<full task text from plan>\n\n## Context\n<where it fits, dependencies>"})`
+- **capricorn**: `run_skill({name: "capricorn", arguments: "Implement Task N: <name>\n\n<full task text from plan>\n\n## Context\n<where it fits, dependencies>\n\n## Domain terms\n<canonical terms from docs/superpowers/glossary.md that this task touches — capricorn uses these verbatim in naming/commits and does NOT read the glossary itself; you are its only source of terminology>"})`
 
 **After all tasks:**
 - **scorpio**: `run_skill({name: "scorpio", arguments: "Spec compliance review: all tasks\n\nSpec:\n<full spec>\n\nPlan executed:\n<full plan>\n\nGit range: BASE <sha> HEAD <sha>\n\nReview the full diff against the full spec. Flag any spec gap, missed requirement, or extra behavior — across all tasks."})`
