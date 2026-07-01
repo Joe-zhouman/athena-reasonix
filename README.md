@@ -77,6 +77,20 @@ If you're on Linux or macOS, you almost certainly want [Claude Code](https://cla
 
 ---
 
+## ⚠️ Session-start injection — how it works here
+
+In Claude Code, superpowers' `SessionStart` hook injects the `using-superpowers` skill into every session's context. That injection is the whole point: it's what makes the model check for skills before acting.
+
+**Reasonix has a `SessionStart` hook, but it does not inject into the model's context.** Per the runtime source (`internal/hook/runner.go`), SessionStart's purpose is "setup side effects (logging, prepping the workspace, desktop notifications)" — its stdout is surfaced to the user, not folded into the system prompt. (Contrast: `PreCompact` / `PostLLMCall` / `UserPromptSubmit` hooks *do* feed stdout back to the model; SessionStart deliberately does not.)
+
+So this repo can't port Claude Code's `hooks/session-start` script and have it work — the runtime would just print the output. Instead, **session-start injection here is done via `AGENTS.md`** at the repo root. Reasonix loads `AGENTS.md` (precedence: `REASONIX.md` > `AGENTS.md` > `CLAUDE.md`) into every session's **cache-stable system-prompt prefix** at boot. That file carries the skill-first discipline; the full reasoning lives in the `using-superpowers` skill, loaded on demand.
+
+**Trade-off:** `AGENTS.md` is a static prefix, not a hash-pinned hook output, so it doesn't get the integrity-check guard Claude Code's hook has. Keep this file short and review changes to it — every byte lands in every session's prefix cache.
+
+**Long-term fix:** upstream Reasonix could let SessionStart's stdout inject as `additionalContext` (like Claude Code). Tracked conceptually as a runtime gap; not something this repo can fix alone.
+
+---
+
 ## Architecture
 
 ### 9 Guardian Subagents

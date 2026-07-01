@@ -77,6 +77,20 @@ Reasonix 本身是跨平台的，但本仓库**只针对 Windows 桌面端做验
 
 ---
 
+## ⚠️ Session-start 注入 —— 本仓库的做法
+
+在 Claude Code 里，superpowers 的 `SessionStart` hook 会把 `using-superpowers` skill 注入到每个会话的上下文。这个注入正是精髓所在：它让模型在行动前先查 skill。
+
+**Reasonix 有 `SessionStart` hook，但它不注入到模型上下文。** 按运行时源码（`internal/hook/runner.go`），SessionStart 的用途是「side effects（日志、准备工作、桌面通知）」——它的 stdout 只显示给用户，不折进系统提示。（对比：`PreCompact` / `PostLLMCall` / `UserPromptSubmit` 这些 hook 的 stdout **会**喂回模型；唯独 SessionStart 故意不这么做。）
+
+所以本仓库**不能**照搬 Claude Code 的 `hooks/session-start` 脚本指望它生效——运行时只会把输出打印出来。取而代之，**本仓库的 session-start 注入靠 repo 根的 `AGENTS.md`**。Reasonix 在 boot 阶段把 `AGENTS.md`（优先级：`REASONIX.md` > `AGENTS.md` > `CLAUDE.md`）折进每个会话的**cache-stable 系统提示前缀**。那份文件承载 skill 优先的纪律；完整论证留在 `using-superpowers` skill 里按需加载。
+
+**代价：** `AGENTS.md` 是静态前缀，不是哈希钉住的 hook 输出，所以没有 Claude Code hook 那个完整性校验护栏。保持该文件简短、改动时审一眼——每个字节都会进每个会话的前缀缓存。
+
+**根治方向：** 上游 Reasonix 可以让 SessionStart 的 stdout 像 `additionalContext` 一样注入（类似 Claude Code）。这是运行时层面的缺口，本仓库单独无法解决。
+
+---
+
 ## 架构
 
 ### 9 位守卫子代理
