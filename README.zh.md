@@ -56,6 +56,27 @@ Claude Code 和 Reasonix 是**两个不同的运行时**——不同的 agent �
 
 ---
 
+## 🪟 平台支持 —— 仅 Windows 桌面端
+
+本仓库只面向 **Reasonix Windows 桌面端**，仅此一端。Linux、macOS、TUI/CLI **不在**支持范围内——这是有意为之，不是疏漏。
+
+**为什么只做 Windows？** 因为在其他平台上你本来就有更好的选择：
+
+| 平台 | 更推荐用 | 原因 |
+|---|---|---|
+| **Linux** | Claude Code TUI | 终端 DX 是一等公民；Reasonix 的前缀缓存优势在常驻机器上没那么关键 |
+| **macOS** | Claude Code 桌面端 | 原生、打磨充分，是参考实现 |
+| **Windows** | **athena-reasonix**（本仓库） | Reasonix 桌面端是 DeepSeek 成本优势 + 这套护栏真正一起发挥价值的地方——也是本仓库服务的人群实际在用的端 |
+
+Reasonix 本身是跨平台的，但本仓库**只针对 Windows 桌面端做验证**。在 Linux/macOS 上出的问题是有意接受的已知缺口——只有当它**同时**在 Windows 桌面端也出问题时，才值得提 issue。具体而言：
+
+- **brainstorming 的可视化对比功能**假设 Windows shell 环境，未在 Linux/macOS TUI 下测试。
+- 安装说明假设 Windows 下的 `~/.reasonix/skills/athena/` 布局。
+
+如果你在 Linux 或 macOS 上，几乎可以肯定你想要的是 [Claude Code](https://claude.com/claude-code)（或面向 Claude Code 的上游 [`athena-superpowers`](https://github.com/Joe-zhouman/athena-superpowers)），而不是本仓库。
+
+---
+
 ## 架构
 
 ### 9 位守卫子代理
@@ -119,15 +140,18 @@ Claude Code 和 Reasonix 是**两个不同的运行时**——不同的 agent �
 | `/discuss-first` | 先聊清楚再写代码 |
 | `/handoff` | 为下一个会话写交接文档 |
 
+**为什么是命令而不是 skill？** 在 Claude Code 中，这三个有 `disable-model-invocation: true`——它们只能由*用户*手动调用（如 `/grill-me`），模型永远不能自动触发。Reasonix 没有等价的前置元数据字段，但自定义命令天然实现了相同的约束：模型无法自动触发 `/command`，只有用户能。正文是同一个 prompt；包装层决定了"仅用户调用"。*（同上游 athena-guard-superpowers）*
+
 ---
 
 ## 安装
 
 ### 前提条件
 
-- 已安装 [Reasonix](https://github.com/esengine/DeepSeek-Reasonix)（`npm i -g reasonix`）
+- **Windows 桌面端** —— 在 Windows 上已安装 [Reasonix 桌面端](https://github.com/esengine/DeepSeek-Reasonix)。（Linux/macOS/TUI 不支持，见上方[平台支持](#-平台支持--仅-windows-桌面端)。）
 - DeepSeek API key（`DEEPSEEK_API_KEY`）
 - 已完成 `reasonix setup`
+- **仅 brainstorming 可视化对比功能需要：** Node.js + 一个 bash shell（Windows 推荐 Git Bash）。该服务只用 Node 内置模块，无需 `npm install`。如果你不用 brainstorming 的可视化模式，这两样都不需要。
 
 ### 安装 athena-reasonix
 
@@ -221,6 +245,14 @@ run_skill({name: "pisces",       arguments: "<待润色文本>"})     → 润色
 - 不要把 API key 放进配置文件——Reasonix 使用 `api_key_env`。
 - 不要引用 `~/.claude/` 路径——这是 Reasonix，用 `~/.reasonix/`。
 - 不要用 `Agent()` 调度——Reasonix 用 `run_skill()`。
+
+---
+
+## 反馈与 Issue
+
+发现 bug？有功能想法？哪里不对劲？**向本仓库提 issue。**
+
+如果你不知道怎么在 GitHub 或 GitCode 上提 issue——**让你的 agent 教你。** 这就是 agent 该干的事。直接输入类似「教我如何为 X 提一个 issue」的话，它会带你走完流程。
 
 ---
 

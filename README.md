@@ -56,6 +56,27 @@ Claude Code and Reasonix are **different runtimes** — different agent systems,
 
 ---
 
+## 🪟 Platform Support — Windows Desktop Only
+
+This repo targets the **Reasonix Windows desktop app**, and only that. Linux, macOS, and the TUI/CLI are **not** supported here — by design, not by neglect.
+
+**Why Windows-only?** Because on every other platform you already have a better option:
+
+| Platform | Use this instead | Reason |
+|---|---|---|
+| **Linux** | Claude Code TUI | First-class terminal DX; Reasonix's prefix-cache edge matters less on a machine that's always on |
+| **macOS** | Claude Code desktop | Native, polished, the reference implementation |
+| **Windows** | **athena-reasonix** (this repo) | Reasonix desktop is where DeepSeek's cost advantage + these guardrails actually pay off together — and it's what the people this repo is built for actually run |
+
+Reasonix itself is cross-platform, but this repo only validates against **Windows desktop**. Anything that breaks on Linux/macOS is a known, accepted gap — file an issue only if it also breaks on Windows desktop. Concretely:
+
+- **Brainstorming's visual companion** assumes a Windows shell environment and is not tested under Linux/macOS TUI.
+- Install instructions assume a Windows `~/.reasonix/skills/athena/` layout.
+
+If you're on Linux or macOS, you almost certainly want [Claude Code](https://claude.com/claude-code) (or the upstream [`athena-superpowers`](https://github.com/Joe-zhouman/athena-superpowers) for Claude Code) — not this repo.
+
+---
+
 ## Architecture
 
 ### 9 Guardian Subagents
@@ -119,15 +140,18 @@ Custom commands for manual user invocation only (not auto-triggered by the model
 | `/discuss-first` | Talk before coding — clarify intent |
 | `/handoff` | Write a handoff doc for the next session |
 
+**Why commands, not skills?** In Claude Code, these three have `disable-model-invocation: true` — they're meant to be invoked by the *user* (`/grill-me`), never by the *model*. Reasonix has no equivalent frontmatter field, but custom commands fill the same role: the model can't auto-trigger a `/command`, only the user can. The body is the same prompt; the wrapper is what enforces "user-only invocation."
+
 ---
 
 ## Install
 
 ### Prerequisites
 
-- [Reasonix](https://github.com/esengine/DeepSeek-Reasonix) installed (`npm i -g reasonix`)
+- **Windows desktop app** — [Reasonix desktop](https://github.com/esengine/DeepSeek-Reasonix) installed on Windows. (Linux/macOS/TUI are unsupported here — see [Platform Support](#-platform-support--windows-desktop-only) above.)
 - DeepSeek API key (`DEEPSEEK_API_KEY`)
 - `reasonix setup` completed
+- **For the brainstorming visual companion only:** Node.js + a bash shell (Git Bash recommended on Windows). The server uses Node built-ins only — no `npm install` needed. If you skip brainstorming's visual mode, you don't need either.
 
 ### Install athena-reasonix
 
@@ -221,6 +245,14 @@ run_skill({name: "pisces",       arguments: "<text to polish>"})     → polishe
 - Don't put API keys in config files — Reasonix uses `api_key_env`.
 - Don't reference `~/.claude/` paths — this is Reasonix; use `~/.reasonix/`.
 - Don't use `Agent()` dispatch — Reasonix uses `run_skill()`.
+
+---
+
+## Issues
+
+Found a bug? Have a feature idea? Something doesn't work as expected? **File an issue on this repo.**
+
+If you don't know how to file an issue on GitHub or GitCode — **ask your agent to teach you.** That's literally what it's there for. Type something like "show me how to file an issue about X" and it'll walk you through it.
 
 ---
 

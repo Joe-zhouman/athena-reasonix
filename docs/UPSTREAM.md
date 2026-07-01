@@ -48,7 +48,7 @@ Joe-zhouman 的个人分支在此基础上进行了以下改造：
 | 子代理调度 | `Agent(subagent_type="name", ...)` | `run_skill({name: "name", arguments: "..."})` |
 | 权限模型 | `.claude/settings.json` hooks | `reasonix.toml` permissions + sandbox |
 | 成本优势 | 多模型混用 (GLM + DeepSeek) | DeepSeek 前缀缓存 (99%+ 缓存命中率) |
-| 跨平台 | macOS/Linux/Windows (Node.js) | macOS/Linux/Windows (Go 单二进制) |
+| 跨平台 | macOS/Linux/Windows (Node.js) | Reasonix 运行时本身跨平台 (Go 单二进制)，但**本仓库只验证/支持 Windows 桌面端**（见 README「平台支持」段） |
 
 ## 致谢
 
