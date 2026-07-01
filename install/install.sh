@@ -77,12 +77,14 @@ BLOCK_FILE="$TARGET/install/athena-block.md"
 BLOCK_CONTENT="$(cat "$BLOCK_FILE")"
 
 # --- 3. INJECT into ~/.reasonix/AGENTS.md (idempotent) ---
-BEGIN="<!-- athena-reasonix:begin"
-END="athena-reasonix:end -->"
+# Merge boundary is the <athena ...> ... </athena> tag pair. Match by substring
+# so the opening tag's attributes (e.g. <athena reasonix>) don't matter.
+BEGIN="<athena"
+END="</athena>"
 echo
 if [[ -f "$AGENTS_FILE" ]]; then
   if grep -qF "$BEGIN" "$AGENTS_FILE"; then
-    info "Existing athena block found — replacing with latest."
+    info "Existing <athena> block found — replacing with latest."
     # Replace inclusive of begin..end using awk (portable, no GNU sed extensions).
     tmp="$(mktemp)"
     awk -v b="$BEGIN" -v e="$END" -v rep="$BLOCK_FILE" '
@@ -90,11 +92,11 @@ if [[ -f "$AGENTS_FILE" ]]; then
       index($0,e) { skip=0; next }
       !skip { print }
     ' "$AGENTS_FILE" > "$tmp" && mv "$tmp" "$AGENTS_FILE"
-    ok "Updated athena block in $AGENTS_FILE (your other content preserved)"
+    ok "Updated <athena> block in $AGENTS_FILE (your other content preserved)"
   else
-    info "AGENTS.md exists with your own content — appending athena block."
+    info "AGENTS.md exists with your own content — appending <athena> block."
     printf '\n\n%s\n' "$BLOCK_CONTENT" >> "$AGENTS_FILE"
-    ok "Appended athena block to $AGENTS_FILE (your content untouched)"
+    ok "Appended <athena> block to $AGENTS_FILE (your content untouched)"
   fi
 else
   info "No AGENTS.md yet — creating one with the athena block."
@@ -120,4 +122,11 @@ echo
 ok "Install complete."
 printf '  Start a new Reasonix session; the skill-first discipline is now in\n'
 printf '  your system prompt. Run /skills to see the 9 guardians + skills.\n'
+echo
+warn "One more thing — sagittarius's router is personalized to Joe's MCP setup."
+printf '  Before your first sagittarius dispatch, migrate its router to YOUR tools:\n'
+printf '  edit ~/.reasonix/skills/athena/refs/sagittarius-tools.md and the router\n'
+printf '  table in skills/sagittarius/SKILL.md (left columns are "capabilities" and\n'
+printf '  stay; only the tool names change). Or ask the agent to walk you through it.\n'
+printf '  See README "Sagittarius Router Is Personalized" for details.\n'
 echo

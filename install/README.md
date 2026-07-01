@@ -31,9 +31,11 @@ bash install.sh --no-check # skip self-check
    and `-Update`).
 3. **Injects** the skill-first block into `~/.reasonix/AGENTS.md` — Reasonix's
    global session-start memory, folded into every session's system prompt. The
-   block is wrapped in `<!-- athena-reasonix:begin -->` / `:end -->` markers, so
-   re-running the installer **updates the block and preserves everything else**
-   in your AGENTS.md. It never overwrites your file.
+   block is wrapped in `<athena reasonix>` … `</athena>` tags, so re-running the
+   installer **updates the block and preserves everything else** in your
+   AGENTS.md. It never overwrites your file. The injected block carries no
+   comments — every byte is real instruction, since it lands in every session's
+   prefix cache (token cost).
 
    Three cases it handles:
    - No `AGENTS.md` → creates one with the block.
@@ -62,7 +64,7 @@ Remove the skills clone and delete the marked block:
 
 ```powershell
 Remove-Item -Recurse -Force "$env:USERPROFILE\.reasonix\skills\athena"
-# then manually delete the <!-- athena-reasonix:begin --> ... :end --> block
+# then manually delete the <athena reasonix> ... </athena> block
 # from ~/.reasonix/AGENTS.md
 ```
 

@@ -104,29 +104,43 @@ if (-not (Test-Path -LiteralPath $BlockFile)) { Die "athena-block.md not found (
 $BlockContent = (Get-Content -LiteralPath $BlockFile -Raw -Encoding UTF8).TrimEnd()
 
 # --- 3. INJECT the block into ~/.reasonix/AGENTS.md (idempotent) ---
-$BeginMarker = "<!-- athena-reasonix:begin"
-$EndMarker = "athena-reasonix:end -->"
+# Merge boundary is the <athena reasonix> ... </athena> tag pair. The opening
+# tag may carry attributes, so match "<athena" up to the first ">" on that line,
+# and the literal "</athena>" closer.
+$BeginMarker = "<athena"
+$EndMarker = "</athena>"
 
 Write-Host ""
 if (Test-Path -LiteralPath $AgentsFile) {
   $existing = Get-Content -LiteralPath $AgentsFile -Raw -Encoding UTF8
-  if ($existing -match [regex]::Escape($BeginMarker)) {
-    # Replace the existing block (between begin/end markers, inclusive).
-    Info "Existing athena block found in AGENTS.md — replacing with latest."
-    $pattern = "(?s)" + [regex]::Escape($BeginMarker) + ".*?" + [regex]::Escape($EndMarker)
-    $newContent = [regex]::Replace($existing, $pattern, $BlockContent)
-    Set-Content -LiteralPath $AgentsFile -Value $newContent -NoNewline -Encoding UTF8
-    Ok "Updated athena block in $AgentsFile (your other content preserved)"
+  if ($existing -match "<athena[^>]*>") {
+    # Replace the existing block (opening tag through </athena>, inclusive).
+    Info "Existing <athena> block found in AGENTS.md — replacing with latest."
+    # Replace the region from the opening <athena ...> tag through the literal
+    # </athena> closer. Done with string indexing (not a regex MatchEvaluator)
+    # so the new content is inserted verbatim — no $ backref expansion — and it
+    # works on PowerShell 5.1 (no ScriptBlock-as-delegate needed).
+    $beginIdx = $existing.IndexOf("<athena")
+    $endIdx = $existing.IndexOf("</athena>")
+    if ($beginIdx -ge 0 -and $endIdx -gt $beginIdx) {
+      $after = $endIdx + "</athena>".Length
+      $newContent = $existing.Substring(0, $beginIdx) + $BlockContent + $existing.Substring($after)
+      Set-Content -LiteralPath $AgentsFile -Value $newContent -NoNewline -Encoding UTF8
+      Ok "Updated <athena> block in $AgentsFile (your other content preserved)"
+    } else {
+      Warn "Markers looked present but couldn't be located cleanly; appending instead."
+      Add-Content -LiteralPath $AgentsFile -Value ("`n`n" + $BlockContent) -Encoding UTF8
+    }
   } else {
     # File exists, no athena block yet — append.
-    Info "AGENTS.md exists with your own content — appending athena block."
+    Info "AGENTS.md exists with your own content — appending <athena> block."
     $sep = "`n`n"
     if ($existing -match "\n$") { $sep = "`n" }
     Add-Content -LiteralPath $AgentsFile -Value ($sep + $BlockContent) -Encoding UTF8
-    Ok "Appended athena block to $AgentsFile (your content untouched)"
+    Ok "Appended <athena> block to $AgentsFile (your content untouched)"
   }
 } else {
-  Info "No AGENTS.md yet — creating one with the athena block."
+  Info "No AGENTS.md yet — creating one with the <athena> block."
   Set-Content -LiteralPath $AgentsFile -Value $BlockContent -NoNewline -Encoding UTF8
   Ok "Created $AgentsFile"
 }
@@ -170,4 +184,11 @@ Write-Host ""
 Ok "Install complete."
 Write-Host "  Start a new Reasonix session; the skill-first discipline is now in" -ForegroundColor DarkGray
 Write-Host "  your system prompt. Run /skills to see the 9 guardians + skills." -ForegroundColor DarkGray
+Write-Host ""
+Warn "One more thing — sagittarius's router is personalized to Joe's MCP setup."
+Write-Host "  Before your first sagittarius dispatch, migrate its router to YOUR tools:" -ForegroundColor DarkGray
+Write-Host "  edit ~/.reasonix/skills/athena/refs/sagittarius-tools.md and the router" -ForegroundColor DarkGray
+Write-Host "  table in skills/sagittarius/SKILL.md (left columns are 'capabilities' and" -ForegroundColor DarkGray
+Write-Host "  stay; only the tool names change). Or ask the agent to walk you through it." -ForegroundColor DarkGray
+Write-Host "  See README 'Sagittarius Router Is Personalized' for details." -ForegroundColor DarkGray
 Write-Host ""

@@ -203,18 +203,13 @@ reasonix          # 启动交互会话
 
 ---
 
-## ⚠️ 射手路由表是个性化配置
+## ⚠️ 使用 sagittarius 之前 —— 迁移它的路由表
 
-Sagittarius 的路由表和工具参考是为 **Joe 的 MCP 配置**（searxng、context7、z-reader 等）构建的。你的 Reasonix 插件不一样。
+Sagittarius 的 Search Router 表和 `refs/sagittarius-tools.md` 是为 **Joe 的 MCP 配置**（searxng、context7、z-reader 等）定制的。你的工具不一样。**结构是通用的，工具名不是。** 所以第一次派 sagittarius 之前，走一遍把路由表重建为你的工具。
 
-**第一次派 sagittarius 时，它会：**
-1. 读取当前的路由表和工具参考
-2. 告诉你："这是为 Joe 的 MCP 配置构建的。你的工具不一样，让我展示我推荐的方案。"
-3. 逐行带你走一遍——每行需要什么能力、你实际有哪些工具、提议的替代方案
-4. 让你否决或调整每一行
-5. 只有在你同意后才重写路由表和参考
+这是**安装时步骤** —— 一键安装脚本结束时会给提示；如果是别的 agent 帮你装的，它应当把这一段提示给你。
 
-不要盲目接受——逐行审查。你的工具，你的路由表。
+怎么做：打开 `~/.reasonix/skills/athena/refs/sagittarius-tools.md` 和 `skills/sagittarius/SKILL.md` 里的路由表。逐行看，左列描述的是一种*能力*（库文档查询、当前网络搜索、学术搜索……），这些保留，只把具体工具名换成你的。或者让 agent 交互式带你做 —— 但**你**决定何时做。你的工具，你的路由表。
 
 ---
 
@@ -235,6 +230,8 @@ athena-superpowers (Claude Code)          athena-reasonix (Reasonix)
 
 Skill 正文几乎一致——主要改动是 frontmatter 和工具名称的移植。Agent 的人格、PHASE 流程和沟通规则完全保留。
 
+**持久化路径有意不改名，和上游保持一致。** brainstorming 把 mockup 写到 `<project>/.superpowers/brainstorm/`，findings 写到 `docs/superpowers/`。我们故意保留 `.superpowers/` 这个名字（而不是改成 `.reasonix/`）：这是整个 superpowers 谱系共用的约定——[`obra/superpowers`](https://github.com/obra/superpowers) → `athena-superpowers` → `athena-reasonix`。所以**本仓库能和 agent 可能同时装着的任何 superpowers 变体干净共存**（Claude Code 的 obra/superpowers、athena-superpowers 等）：同一份 `.gitignore` 条目到处适用，任一变体碰过的项目都带同样的产物。把 `.superpowers/` 加进 `.gitignore`。
+
 ---
 
 ## For Agents
@@ -248,7 +245,7 @@ Skill 正文几乎一致——主要改动是 frontmatter 和工具名称的移�
 3. **子代理中没有 `Agent` 工具。** 守卫不能调用其他守卫。由主 agent 调度。
 4. **没有 `TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`。** Reasonix 用 `todo_write` 和 `complete_step` 代替。
 5. **模型层级由 provider 定义。** `deepseek-pro` 和 `deepseek-flash` 在 `reasonix.toml` 中配置。用户可能重命名。
-6. **射手路由表是个性化配置。** 工具参考描述的是 MCP 工具，可能在用户的设置中不存在。带用户走一遍重建流程——不要静默覆盖。
+6. **射手路由表是个性化配置。** 工具参考描述的是 MCP 工具，可能在用户的设置中不存在。若用户要求，逐行带他走一遍重建流程——不要静默覆盖。这是用户主动选择的安装时迁移，不是 sagittarius 在运行时自作主张。
 7. **findings-local.md / findings-external.md** 持久化到 `docs/superpowers/`（与 athena-superpowers 相同约定）。
 8. **斜杠命令**如 `/grill-me` 是 `.reasonix/commands/` 下的自定义命令，不是 skills。
 

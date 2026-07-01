@@ -203,18 +203,13 @@ reasonix          # start interactive session
 
 ---
 
-## ⚠️ Sagittarius Router Is Personalized
+## ⚠️ Before using sagittarius — migrate its router
 
-Sagittarius's router table and tools reference were built for **Joe's MCP setup** (searxng, context7, z-reader, etc.). Your Reasonix plugins are different.
+Sagittarius's Search Router table and `refs/sagittarius-tools.md` are customized for **Joe's MCP setup** (searxng, context7, z-reader, etc.). Your tools are different. **The structure is generic; the tool names are not.** So before your first sagittarius dispatch, walk through rebuilding the router for your tools.
 
-**The first time you dispatch sagittarius, it will:**
-1. Read its current router and tools ref
-2. Tell you: "This was built for Joe's MCP setup. Your tools are different. Let me show you what I'd recommend."
-3. Walk you through each row — what capability it needs, what tools you actually have, a proposed replacement
-4. Let you veto/adjust each row
-5. Rewrite the router table and ref only when you agree
+This is an **install-time step** — the one-shot installer prints this reminder when it finishes; if an agent installed this for you, it should flag this section to you.
 
-Don't blindly accept — review each row. Your tools, your router.
+How: open `~/.reasonix/skills/athena/refs/sagittarius-tools.md` and the router in `skills/sagittarius/SKILL.md`. For each row, the left columns describe a *capability* (library-docs lookup, current web search, academic search…); keep those, swap the concrete tool names for yours. Or ask the agent to walk you through it interactively — but **you** decide when. Your tools, your router.
 
 ---
 
@@ -235,6 +230,8 @@ athena-superpowers (Claude Code)          athena-reasonix (Reasonix)
 
 Skills bodies are nearly identical — mostly porting changes to frontmatter and tool names. Agent personalities, PHASE flows, and communication rules are preserved.
 
+**Persistence paths are intentionally unchanged from upstream.** brainstorming writes mockups to `<project>/.superpowers/brainstorm/`, and findings go to `docs/superpowers/`. We keep the `.superpowers/` name (rather than renaming to `.reasonix/`) on purpose: it's the convention the whole superpowers lineage uses — [`obra/superpowers`](https://github.com/obra/superpowers) → `athena-superpowers` → `athena-reasonix`. So **this repo coexists cleanly with any other superpowers variant an agent might also have installed** (Claude Code's obra/superpowers, athena-superpowers, etc.): same `.gitignore` entry works everywhere, and a project touched by any variant carries the same artifacts. Add `.superpowers/` to your `.gitignore`.
+
 ---
 
 ## For Agents
@@ -248,7 +245,7 @@ When an agent or subagent reads this repo, here's what it needs to know:
 3. **No `Agent` tool in subagents.** Guardians can't spawn other guardians. The main agent dispatches.
 4. **No `TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`.** Reasonix has `todo_write` and `complete_step` instead.
 5. **Model tiers are provider-defined.** `deepseek-pro` and `deepseek-flash` are configured in `reasonix.toml`. Users may rename them.
-6. **Sagittarius router is personalized.** The tools ref describes MCP tools that may not exist in the user's setup. Walk them through rebuilding it — don't silently overwrite.
+6. **Sagittarius router is personalized.** The tools ref describes MCP tools that may not exist in the user's setup. If the user asks, walk them through rebuilding it row by row — don't silently overwrite. This is an install-time migration the user opts into, not something sagittarius does unprompted at runtime.
 7. **findings-local.md / findings-external.md** persist to `docs/superpowers/` (same convention as athena-superpowers).
 8. **Slash commands** like `/grill-me` are custom commands in `.reasonix/commands/`, not skills.
 
