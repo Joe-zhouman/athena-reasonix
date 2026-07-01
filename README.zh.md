@@ -1,0 +1,204 @@
+# athena-reasonix
+
+<p align="center">
+  <a href="./README.md">English</a>
+  &nbsp;·&nbsp;
+  <strong>简体中文</strong>
+  &nbsp;·&nbsp;
+  <a href="./docs/UPSTREAM.md">上游项目</a>
+</p>
+
+**雅典娜的守卫，移植到 DeepSeek Reasonix。** 同样 9 位星座人格化子代理，同样的痛点驱动哲学，同样的 grill-me 式头脑风暴 —— 运行在 Reasonix 的前缀缓存优先引擎上，而非 Claude Code。
+
+> 这是 [`athena-guard-superpowers`](https://github.com/Joe-zhouman/athena-guard-superpowers) 的 **Reasonix 移植版**。完整思想渊源见 [docs/UPSTREAM.md](docs/UPSTREAM.md)。如果你用 Claude Code，去原版。如果你用 Reasonix，来对地方了。
+
+---
+
+## 为什么要有两个仓库？
+
+Claude Code 和 Reasonix 是**两个不同的运行时**——不同的 agent 体系、不同的权限模型、不同的持久化约定。移植不是复制粘贴，而是概念翻译：
+
+| 层面 | athena-superpowers (Claude Code) | athena-reasonix (Reasonix) |
+|---|---|---|
+| Agent 格式 | YAML frontmatter + `tools`/`disallowedTools`/`maxTurns` | YAML frontmatter + `runAs: subagent`/`allowed-tools` |
+| 模型层级 | `fable`/`sonnet`/`haiku`（Claude Code 模型名） | `deepseek-pro`/`deepseek-flash`（在 `reasonix.toml` 中由 provider 定义） |
+| Agent 调度 | `Agent(subagent_type="capricorn", ...)` | `run_skill({name: "capricorn", arguments: "..."})` |
+| 斜杠命令 | `disable-model-invocation: true` | `.reasonix/commands/` 下的自定义命令 |
+| 持久化 | `docs/superpowers/`（athena 约定） | 沿用相同约定；Reasonix 还有 `REASONIX.md`/`AGENTS.md` |
+| 安装 | Shell 脚本 + 符号链接 | Clone 到 `~/.reasonix/skills/athena/` |
+
+**同一套哲学，不同的运行时。** 两个仓库共享：9 位星座守卫、痛点驱动开发、文件持久化、独立审查关卡，以及"有个性的 agent 更好用"的信念。
+
+---
+
+## 架构
+
+### 9 位守卫子代理
+
+每位守卫是一个 Reasonix **subagent skill**（`runAs: subagent`）。它们在隔离的子循环中运行——工具调用和推理过程不会污染父上下文，只有最终结论返回。
+
+| 守卫 | 星座 | 角色 | 模型层级 | 自动触发？ |
+|------|------|------|---------|----------|
+| **capricorn** | 摩羯 | 执行者——TDD，一次一个任务 | deepseek-pro | 每个任务 |
+| **scorpio** | 天蝎 | Spec 合规审查者 | deepseek-pro | 每批次一次 |
+| **taurus** | 金牛 | 代码质量审查者 | deepseek-pro | scorpio 之后 |
+| **libra** | 天秤 | 计划/Spec 把关人 | deepseek-pro | 实现之前 |
+| **cancer** | 巨蟹 | Bug 修复者（复现→根因→修复） | deepseek-pro | 收到 bug 报告时 |
+| **aries** | 白羊 | 对抗性测试者——运行时攻击 | deepseek-pro | Aries Gate 触发时 |
+| **virgo** | 处女 | 本地代码库探索者（只读） | deepseek-flash | 按需 |
+| **sagittarius** | 射手 | 外部研究员（网络、文档、论文） | deepseek-flash | 按需 |
+| **pisces** | 双鱼 | 文本润色——去 AI 味 + agent 可读性 | deepseek-pro | 按需 |
+
+**Reasonix 中的模型层级：**
+- `deepseek-pro`（≈ Claude Code 的 sonnet/fable 层级）：capricorn、scorpio、taurus、libra、cancer、aries、pisces
+- `deepseek-flash`（≈ Claude Code 的 haiku 层级）：virgo、sagittarius
+
+这些是默认值。可通过 frontmatter 中的 `model:` 逐 skill 覆盖，或在 `reasonix.toml` 中用 `subagent_models` 全局覆盖。
+
+### Skills（内联）
+
+没有 `runAs: subagent` 的 Reasonix skill 会折叠到父上下文中（内联）。这些是操作手册：
+
+| Skill | 用途 |
+|-------|------|
+| **brainstorming** | Grill-me 访谈 → 设计决策 |
+| **writing-spec** | 痛点驱动的 spec 格式 |
+| **subagent-driven-development** | 每个任务派 capricorn + 批次结束后派 scorpio/taurus |
+| **dispatching-parallel-agents** | 将独立工作扇出到子代理 |
+| **systematic-debugging** | 可复现 bug → 根因分析 |
+| **using-superpowers** | Skill 调用规范 |
+| **verification-before-completion** | 完成前检查清单 |
+| **executing-plans** | 计划 → 任务拆解 → 执行 |
+| **writing-plans** | 计划文档结构 |
+| **finishing-a-development-branch** | PR 就绪检查清单 |
+| **requesting-code-review** | 代码审查请求格式 |
+| **receiving-code-review** | 代码审查响应格式 |
+| **test-driven-development** | TDD 规范 |
+| **using-git-worktrees** | Git worktree 工作流 |
+
+### 补充 Skills（来自 Matt Pocock）
+
+| Skill | 用途 |
+|-------|------|
+| **diagnosing-bugs** | 无清晰复现路径的疑难 bug |
+| **to-prd** | 对话 → PRD 合成 |
+| **prototype** | 为回答设计问题而构建的一次性原型 |
+
+### 斜杠命令
+
+仅供用户手动调用的自定义命令（模型不会自动触发）：
+
+| 命令 | 用途 |
+|------|------|
+| `/grill-me` | 不留情面地盘问你的计划/设计 |
+| `/discuss-first` | 先聊清楚再写代码 |
+| `/handoff` | 为下一个会话写交接文档 |
+
+---
+
+## 安装
+
+### 前提条件
+
+- 已安装 [Reasonix](https://github.com/esengine/DeepSeek-Reasonix)（`npm i -g reasonix`）
+- DeepSeek API key（`DEEPSEEK_API_KEY`）
+- 已完成 `reasonix setup`
+
+### 安装 athena-reasonix
+
+```sh
+# Clone 到 Reasonix 全局 skills 目录
+git clone https://github.com/Joe-zhouman/athena-reasonix.git ~/.reasonix/skills/athena
+
+# Reasonix 自动发现约定目录下的 skills
+```
+
+无需安装脚本。Reasonix 会扫描 `.reasonix/skills/`（以及其他约定目录）中的 `SKILL.md` 文件。整个仓库自包含——所有 skills、commands 和 refs 都在一个目录下。
+
+### 验证
+
+```sh
+reasonix          # 启动交互会话
+/skills            # 列出已加载的 skills——你应该能看到全部 9 位守卫 + skills
+/grill-me          # 测试斜杠命令
+```
+
+---
+
+## ⚠️ 射手路由表是个性化配置
+
+Sagittarius 的路由表和工具参考是为 **Joe 的 MCP 配置**（searxng、context7、z-reader 等）构建的。你的 Reasonix 插件不一样。
+
+**第一次派 sagittarius 时，它会：**
+1. 读取当前的路由表和工具参考
+2. 告诉你："这是为 Joe 的 MCP 配置构建的。你的工具不一样，让我展示我推荐的方案。"
+3. 逐行带你走一遍——每行需要什么能力、你实际有哪些工具、提议的替代方案
+4. 让你否决或调整每一行
+5. 只有在你同意后才重写路由表和参考
+
+不要盲目接受——逐行审查。你的工具，你的路由表。
+
+---
+
+## 与 athena-superpowers 的关系
+
+```
+athena-superpowers (Claude Code)          athena-reasonix (Reasonix)
+├── .claude-plugin/plugin.json            ├── skills/  (Reasonix 自动发现)
+├── user-agents/  (Claude Code agents)    │   ├── capricorn/SKILL.md  (subagent skill)
+│   ├── capricorn.md                      │   ├── scorpio/SKILL.md
+│   └── ...                               │   └── ...
+├── skills/  (Claude Code skills)         ├── commands/  (Reasonix 自定义命令)
+│   ├── brainstorming/SKILL.md            │   ├── grill-me.md
+│   └── ...                               │   └── ...
+├── hooks/  (Claude Code hooks)           ├── refs/  (与 skills 共享)
+└── install.sh                            └── README.md
+```
+
+Skill 正文几乎一致——主要改动是 frontmatter 和工具名称的移植。Agent 的人格、PHASE 流程和沟通规则完全保留。
+
+---
+
+## For Agents
+
+当 agent 或子代理阅读此仓库时，需要知道以下内容：
+
+### 关键规则
+
+1. **这是 Reasonix，不是 Claude Code。** 子代理通过 `run_skill({name, arguments})` 调用，而非 `Agent(subagent_type=...)`。
+2. **工具使用 Reasonix 命名。** `read_file` 而非 `Read`；`write_file` 而非 `Write`；`edit_file` 而非 `Edit`；`grep`/`glob`/`bash`/`ls`/`web_fetch`。
+3. **子代理中没有 `Agent` 工具。** 守卫不能调用其他守卫。由主 agent 调度。
+4. **没有 `TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`。** Reasonix 用 `todo_write` 和 `complete_step` 代替。
+5. **模型层级由 provider 定义。** `deepseek-pro` 和 `deepseek-flash` 在 `reasonix.toml` 中配置。用户可能重命名。
+6. **射手路由表是个性化配置。** 工具参考描述的是 MCP 工具，可能在用户的设置中不存在。带用户走一遍重建流程——不要静默覆盖。
+7. **findings-local.md / findings-external.md** 持久化到 `docs/superpowers/`（与 athena-superpowers 相同约定）。
+8. **斜杠命令**如 `/grill-me` 是 `.reasonix/commands/` 下的自定义命令，不是 skills。
+
+### Agent 调度参考
+
+```
+主 agent 通过 run_skill 派子代理：
+
+run_skill({name: "capricorn",    arguments: "<任务描述>"})   → 实现
+run_skill({name: "scorpio",      arguments: "<spec + git 范围>"})   → 审查 spec 合规性
+run_skill({name: "taurus",       arguments: "<git 范围>"})          → 审查代码质量
+run_skill({name: "libra",        arguments: "<计划/spec 路径>"})     → 把关计划
+run_skill({name: "cancer",       arguments: "<bug 复现>"})          → 修复 bug
+run_skill({name: "aries",        arguments: "<目标 + 攻击面>"})  → 运行时攻击
+run_skill({name: "virgo",        arguments: "<探索问题>"})→ 绘制代码库地图
+run_skill({name: "sagittarius",  arguments: "<研究问题>"})  → 知识狩猎
+run_skill({name: "pisces",       arguments: "<待润色文本>"})     → 润色文本
+```
+
+### 反模式
+
+- 不要 clone 整个仓库作为项目文件——Reasonix 从约定目录自动发现 skills。
+- 不要把 API key 放进配置文件——Reasonix 使用 `api_key_env`。
+- 不要引用 `~/.claude/` 路径——这是 Reasonix，用 `~/.reasonix/`。
+- 不要用 `Agent()` 调度——Reasonix 用 `run_skill()`。
+
+---
+
+## License
+
+MIT — 参见 [LICENSE](https://github.com/esengine/DeepSeek-Reasonix/blob/master/LICENSE)（继承自上游 athena-superpowers）。
