@@ -45,9 +45,16 @@ Save `screen_dir` and `state_dir` from the response. Tell user to open the URL.
 
 **Finding connection info:** The server writes its startup JSON to `$STATE_DIR/server-info`. If you launched the server in the background and didn't capture stdout, read that file to get the URL and port. When using `--project-dir`, check `<project>/.superpowers/brainstorm/` for the session directory.
 
-**Note:** Pass the project root as `--project-dir` so mockups persist in `.superpowers/brainstorm/` and survive server restarts. Without it, files go to `/tmp` and get cleaned up. Remind the user to add `.superpowers/` to `.gitignore` if it's not already there.
+**Note:** Pass the project root as `--project-dir` so mockups persist in `.superpowers/brainstorm/` and survive server restarts. Without it, files go to the OS temp dir (`/tmp` on Unix, `%TEMP%` on Windows) and get cleaned up. Remind the user to add `.superpowers/` to `.gitignore` if it's not already there.
 
 **Launching the server by platform:**
+
+**Reasonix desktop on Windows (no Git Bash) — PowerShell launcher:**
+```powershell
+# Use start-server.ps1 when bash is unavailable. Foreground by default.
+powershell -ExecutionPolicy Bypass -File scripts/start-server.ps1 -ProjectDir C:\path\to\project
+```
+This is the recommended path for the Windows desktop app, where `shell.prefer=auto` may fall back to PowerShell. Requires Node.js on PATH (Reasonix bundles a Go binary, not Node).
 
 **Claude Code (macOS / Linux):**
 ```bash
@@ -55,7 +62,7 @@ Save `screen_dir` and `state_dir` from the response. Tell user to open the URL.
 scripts/start-server.sh --project-dir /path/to/project
 ```
 
-**Claude Code (Windows):**
+**Claude Code (Windows, with Git Bash):**
 ```bash
 # Windows auto-detects and uses foreground mode, which blocks the tool call.
 # Use run_in_background: true on the Bash tool call so the server survives
