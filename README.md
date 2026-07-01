@@ -14,6 +14,31 @@
 
 ---
 
+## Why Superpowers on Reasonix?
+
+**DeepSeek models do what you say, not what you mean.**
+
+This is the fundamental asymmetry between DeepSeek and Claude. Claude models are trained to read between the lines — they infer intent, push back on ambiguity, fill in gaps. DeepSeek models execute literally. Give them a vague task and they'll faithfully build the wrong thing, at speed, without ever stopping to say "wait, this doesn't make sense."
+
+Reasonix's killer feature is the prefix cache — 99%+ cache hit rates, 1/5 the token cost of a cold session. It's the cheapest way to run long coding sessions. But that cost advantage is wasted if the model burns cheap tokens building the wrong thing.
+
+**Superpowers is the guardrail layer that DeepSeek needs and Claude doesn't.**
+
+| DeepSeek's tendency | Superpowers countermeasure |
+|---|---|
+| "Do what you say" — literal, doesn't question | **brainstorming + discuss-first** — force clarification before code |
+| Won't suggest alternatives unprompted | **writing-spec** — design rationale must explain *why this over alternatives* |
+| Won't catch its own scope creep | **scorpio** — independent spec-compliance review |
+| Executes faithfully, skips quality judgment | **taurus** — independent code-quality review |
+| Runs fast, breaks fast | **aries** — adversarial runtime testing |
+| No intrinsic skepticism | Every gate is an independent agent, not the implementer reviewing itself |
+
+Each skill and guardian is a **manufactured check** where DeepSeek's natural tendencies leave a gap. The point isn't to make DeepSeek behave like Claude — it's to build the guardrails that let DeepSeek's strengths (speed, cost, obedience) operate safely. Obedience is a feature when the instructions are correct; superpowers makes sure the instructions are correct before obedience kicks in.
+
+In short: **Reasonix makes DeepSeek cheap. Superpowers makes DeepSeek safe.**
+
+---
+
 ## Why Two Repos?
 
 Claude Code and Reasonix are **different runtimes** — different agent systems, different permission models, different persistence conventions. Porting isn't copy-paste; it's translating concepts:

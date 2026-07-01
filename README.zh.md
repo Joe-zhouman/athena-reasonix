@@ -14,6 +14,31 @@
 
 ---
 
+## 为什么要在 Reasonix 上用 Superpowers？
+
+**DeepSeek 模型做你说的事，而不是做你想的事（do what you say, not what you mean）。**
+
+这是 DeepSeek 与 Claude 的根本差异。Claude 模型会"读心"——推断意图、质疑模糊、填补空白。DeepSeek 模型则精确执行字面指令。给一个模糊的任务，它会忠实地造出错误的东西，全速推进，从不暂停说一句"等等，这不对吧"。
+
+Reasonix 的杀手特性是前缀缓存——99% 以上的缓存命中率、token 成本降到冷会话的 1/5。这是跑长会话最省钱的方式。但如果模型一直在便宜地造错误的东西，成本优势就毫无意义。
+
+**Superpowers 是 DeepSeek 需要而 Claude 不需要的护栏层。**
+
+| DeepSeek 的倾向 | Superpowers 的应对 |
+|---|---|
+| "做你说的事"——字面执行，不质疑 | **brainstorming + discuss-first** —— 写下代码之前强行澄清 |
+| 不会主动提出替代方案 | **writing-spec** —— 设计理由必须解释「为什么这么做而不是别的」 |
+| 不会发现自己的 scope creep | **scorpio** —— 独立的 spec 合规审查 |
+| 忠实执行，跳过质量判断 | **taurus** —— 独立的代码质量审查 |
+| 跑得快，坏得也快 | **aries** —— 对抗性运行时测试 |
+| 没有内在的怀疑能力 | 每个审查关卡都是独立 agent，不是实现者自查 |
+
+每个 skill 和每个守卫都是在 DeepSeek 的天生盲区里**人为制造的检查点**。目的不是让 DeepSeek 变得像 Claude——而是在 DeepSeek 的优势（速度、成本、服从性）外面加上安全护栏。当指令正确时，服从就是美德；superpowers 确保在服从启动之前，指令本身是正确的。
+
+一句话：**Reasonix 让 DeepSeek 便宜。Superpowers 让 DeepSeek 安全。**
+
+---
+
 ## 为什么要有两个仓库？
 
 Claude Code 和 Reasonix 是**两个不同的运行时**——不同的 agent 体系、不同的权限模型、不同的持久化约定。移植不是复制粘贴，而是概念翻译：
