@@ -169,14 +169,29 @@ Reasonix 本身是跨平台的，但本仓库**只针对 Windows 桌面端做验
 
 ### 安装 athena-reasonix
 
-```sh
-# Clone 到 Reasonix 全局 skills 目录
-git clone https://github.com/Joe-zhouman/athena-reasonix.git ~/.reasonix/skills/athena
+**推荐 —— 一键安装脚本**（clone + 注入纪律 + 自检）：
 
-# Reasonix 自动发现约定目录下的 skills
+```powershell
+# Windows（PowerShell 5.1+）
+powershell -ExecutionPolicy Bypass -File install.ps1
 ```
 
-无需安装脚本。Reasonix 会扫描 `.reasonix/skills/`（以及其他约定目录）中的 `SKILL.md` 文件。整个仓库自包含——所有 skills、commands 和 refs 都在一个目录下。
+```bash
+# Linux / macOS
+bash install.sh
+```
+
+安装脚本会 clone 到 `~/.reasonix/skills/athena/`，并把 skill 优先的纪律**注入** `~/.reasonix/AGENTS.md`（Reasonix 的全局 session-start memory）。**绝不覆盖**你的 AGENTS.md —— 它靠标记块幂等合并/替换，其余内容一字不动。参数（`-Update`、`-NoCheck`、`-SkipServer`）和跨工具注意事项见 [`install/README.md`](install/README.md)。
+
+**手动安装**（如果你更想自己控制）：
+
+```sh
+git clone https://github.com/Joe-zhouman/athena-reasonix.git ~/.reasonix/skills/athena
+# 然后自行把仓库的 AGENTS.md 内容合并进 ~/.reasonix/AGENTS.md
+# （或只为注入这一步跑一次 install.ps1）。
+```
+
+Reasonix 自动发现 `.reasonix/skills/` 下的 skills —— 目录式（`<name>/SKILL.md`）始终被识别。
 
 ### 验证
 

@@ -169,14 +169,29 @@ Custom commands for manual user invocation only (not auto-triggered by the model
 
 ### Install athena-reasonix
 
-```sh
-# Clone to Reasonix global skills
-git clone https://github.com/Joe-zhouman/athena-reasonix.git ~/.reasonix/skills/athena
+**Recommended — one-shot installer** (clones + injects the discipline + self-checks):
 
-# Reasonix auto-discovers skills under convention dirs
+```powershell
+# Windows (PowerShell 5.1+)
+powershell -ExecutionPolicy Bypass -File install.ps1
 ```
 
-No install script needed. Reasonix scans `.reasonix/skills/` (among others) for `SKILL.md` files. The repo is self-contained — all skills, commands, and refs live under one directory.
+```bash
+# Linux / macOS
+bash install.sh
+```
+
+The installer clones into `~/.reasonix/skills/athena/` and **injects** the skill-first discipline into `~/.reasonix/AGENTS.md` (Reasonix's global session-start memory). It never overwrites your AGENTS.md — it merges a marked block in/out idempotently. See [`install/README.md`](install/README.md) for flags (`-Update`, `-NoCheck`, `-SkipServer`) and the cross-tool warning.
+
+**Manual** (if you prefer):
+
+```sh
+git clone https://github.com/Joe-zhouman/athena-reasonix.git ~/.reasonix/skills/athena
+# Then copy the repo's AGENTS.md content into ~/.reasonix/AGENTS.md yourself
+# (or run install.ps1 just for the injection step).
+```
+
+Reasonix auto-discovers skills under `.reasonix/skills/` — directory-layout skills (`<name>/SKILL.md`) are always recognized.
 
 ### Verify
 
