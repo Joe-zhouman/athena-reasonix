@@ -1,0 +1,172 @@
+{
+  "iteration": 1,
+  "skill_name": "prototype",
+  "description": "Build THROWAWAY code to settle ONE design question that conversation alone can't — a state machine that needs driving to see if it feels right, a logic/edge-case interaction hard to reason about on paper, or a UI that needs concrete variants to react to. Use this whenever a design discussion stalls on \"does this actually work?\" or \"what should it look like?\" and the cheapest way forward is to run it for 10 minutes, NOT to start real implementation. The output is a verdict (absorbed into the design), then the code is deleted. Distinct from real implementation — no tests, no persistence, no polish.",
+  "summary": {
+    "total": 20,
+    "passed": 12,
+    "failed": 8
+  },
+  "results": [
+    {
+      "query": "I'm not sure if my event sourcing model handles the case where two conflicting events arrive out of order. Could you whip up a tiny prototype that simulates event ordering scenarios so I can see where the state breaks?",
+      "should_trigger": true,
+      "trigger_rate": 0.6666666666666666,
+      "triggers": 2,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "ok so we're arguing about whether the notification panel should be a slide-out drawer or an inline dropdown. can you just build both on the current dashboard page so we can actually see them side by side instead of debating mockups?",
+      "should_trigger": true,
+      "trigger_rate": 0.6666666666666666,
+      "triggers": 2,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "The billing logic for pro-rating subscriptions is getting complicated — partial months, upgrades mid-cycle, refund calculations. Before writing the real thing, can we prototype the core calculation in a little interactive script so I can test edge cases?",
+      "should_trigger": true,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": false
+    },
+    {
+      "query": "We need to revamp the checkout flow but the PM and designer disagree on single-page vs multi-step wizard. Can you prototype both variants on the existing /checkout route so we can actually click through them?",
+      "should_trigger": true,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": false
+    },
+    {
+      "query": "I have this auth flow with multi-factor, remember-me tokens, and session expiry. Before I spec it out, can you code up a quick terminal simulation where I can log in, trigger MFA, let sessions expire, and see how the state transitions behave?",
+      "should_trigger": true,
+      "trigger_rate": 0.6666666666666666,
+      "triggers": 2,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "I need to decide between three different layouts for our user profile page — a sidebar-heavy one, a centered card layout, and a tabbed view. Can you mock up all three so I can flip between them and pick one?",
+      "should_trigger": true,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": false
+    },
+    {
+      "query": "I want to feel out what the API for our background job manager should look like before writing it. Can you build a little interactive REPL where I can enqueue jobs, check status, cancel, retry — just to get a feel for the ergonomics?",
+      "should_trigger": true,
+      "trigger_rate": 0.3333333333333333,
+      "triggers": 1,
+      "runs": 3,
+      "pass": false
+    },
+    {
+      "query": "The search filters on our product listing feel clunky. Can you mock up 3-4 different filter UI patterns (accordion, horizontal chips, sidebar facets, inline dropdowns) so I can click through them and compare?",
+      "should_trigger": true,
+      "trigger_rate": 0.3333333333333333,
+      "triggers": 1,
+      "runs": 3,
+      "pass": false
+    },
+    {
+      "query": "The payment processing module keeps failing on edge cases — partial refunds, currency conversion rounding, pro-rata calculations. The logic is in a file called `pro_rata.py`, can you find it and debug what's wrong with the calculation?",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "I'm designing a task queue with states pending → running → paused → completed → failed. Before I commit to this state machine, can you build a quick terminal app where I can push it through transitions and see if it feels right? I'm worried about the pause-during-retry edge case.",
+      "should_trigger": true,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": false
+    },
+    {
+      "query": "Write a complete test suite for our UserAuthentication class — unit tests, integration tests, coverage above 90%. This needs to be thorough.",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "There's a bug in production where users get randomly logged out. I need you to trace through the session management code and find the root cause, then fix it properly.",
+      "should_trigger": false,
+      "trigger_rate": 0.6666666666666666,
+      "triggers": 2,
+      "runs": 3,
+      "pass": false
+    },
+    {
+      "query": "Can you plan out the architecture for our new microservice? I need deployment diagrams, data flow, API contracts, and a detailed implementation roadmap. No code yet, just the design doc.",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "Set up the database schema for our new feature — I need migration files, indexes, and ORM models. This is going to production so make it production-ready with proper constraints and rollback plans.",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "Refactor the notification service — it's become a god class with 2000 lines. Split it into separate concerns, add proper interfaces, and make sure all 47 existing tests still pass.",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "I want to add dark mode support to our entire app. This needs to be done properly — CSS variables, system preference detection, persistent user preference, smooth transitions. Real implementation, not a demo.",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "Can you review this PR? It's a major refactor of the authentication layer and I want to make sure nothing is broken before merging to main.",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "I need to write a technical spec for the new recommendation engine. This goes to the architecture review board so it needs latency budgets, data freshness requirements, and failure mode analysis.",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "Our CI pipeline takes 25 minutes. Can you analyze the build times, identify the slowest steps, and optimize the Docker layer caching and test parallelization? This is real infra work.",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "I'm designing a rate limiter with sliding window + token bucket + concurrent request limits all interacting. My brain can't hold all the edge cases at once — can you build a quick interactive simulation where I can fire requests and watch the limiter state?",
+      "should_trigger": true,
+      "trigger_rate": 0.3333333333333333,
+      "triggers": 1,
+      "runs": 3,
+      "pass": false
+    }
+  ]
+}

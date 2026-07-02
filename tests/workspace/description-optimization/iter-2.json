@@ -1,0 +1,172 @@
+{
+  "iteration": 2,
+  "skill_name": "prototype",
+  "description": "Use when the user asks you to build throwaway exploratory code to answer a design question before committing — an interactive terminal simulation to test-drive a state machine or logic edge cases, OR multiple UI variants on a page to compare side-by-side. Always invoke this skill rather than just writing prototype code yourself — it has a structured workflow that ensures the prototype actually answers the right question. Trigger on English phrases like \"prototype this\", \"whip up a quick\", \"mock up variants\", \"before I build the real thing\", \"test-drive\", \"try a few layouts\", \"flip between options\", \"compare variants side by side\", \"see how it feels\", \"interactive sim\", \"push it through transitions\". Trigger on Chinese phrases like \"弄个原型\", \"搭个原型跑跑看\", \"快速写个交互脚本\", \"先把状态机走一遍\", \"做几个方案出来选\", \"Mock 几个版本对比\", \"几版布局切换看看\", \"试试看哪个好\", \"先写个小的试试水\", \"做个模拟推一下边界\", \"切来切去比较\", \"把计算逻辑抽出来试\", \"还没想好具体怎么做，先跑起来看看感觉\", \"在现有页面上搭几个变体\". Do NOT use for debugging existing code, writing tests, production features, architecture docs, code review, or refactoring.",
+  "summary": {
+    "total": 20,
+    "passed": 14,
+    "failed": 6
+  },
+  "results": [
+    {
+      "query": "I have this auth flow with multi-factor, remember-me tokens, and session expiry. Before I spec it out, can you code up a quick terminal simulation where I can log in, trigger MFA, let sessions expire, and see how the state transitions behave?",
+      "should_trigger": true,
+      "trigger_rate": 0.3333333333333333,
+      "triggers": 1,
+      "runs": 3,
+      "pass": false
+    },
+    {
+      "query": "I'm not sure if my event sourcing model handles the case where two conflicting events arrive out of order. Could you whip up a tiny prototype that simulates event ordering scenarios so I can see where the state breaks?",
+      "should_trigger": true,
+      "trigger_rate": 1.0,
+      "triggers": 3,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "ok so we're arguing about whether the notification panel should be a slide-out drawer or an inline dropdown. can you just build both on the current dashboard page so we can actually see them side by side instead of debating mockups?",
+      "should_trigger": true,
+      "trigger_rate": 0.3333333333333333,
+      "triggers": 1,
+      "runs": 3,
+      "pass": false
+    },
+    {
+      "query": "用户资料页我现在拿不准，侧边栏重的、居中卡片的、还是分 tab 的。你帮我在现有页面上做几个版本出来，让我切换着看看哪个好？",
+      "should_trigger": true,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": false
+    },
+    {
+      "query": "We need to revamp the checkout flow but the PM and designer disagree on single-page vs multi-step wizard. Can you prototype both variants on the existing /checkout route so we can actually click through them?",
+      "should_trigger": true,
+      "trigger_rate": 0.6666666666666666,
+      "triggers": 2,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "计费系统的按比例折算太绕了——跨月升级、周期中退款、日单价计算，各种边界。你先写个小的交互脚本让我推几个 case 试试水，没问题了再写正式的。",
+      "should_trigger": true,
+      "trigger_rate": 0.3333333333333333,
+      "triggers": 1,
+      "runs": 3,
+      "pass": false
+    },
+    {
+      "query": "搜索筛选太卡了体验不好。你帮我在页面上搭几个不同的筛选 UI 方案——手风琴的、横向标签的、侧边栏多面的、行内下拉的——我来回切着对比一下。",
+      "should_trigger": true,
+      "trigger_rate": 0.3333333333333333,
+      "triggers": 1,
+      "runs": 3,
+      "pass": false
+    },
+    {
+      "query": "后台任务管理器我还没想好 API 长什么样，你帮我弄个简单的交互式 REPL 原型，能入队、查状态、取消、重试——主要是感觉一下接口好不好用。",
+      "should_trigger": true,
+      "trigger_rate": 0.6666666666666666,
+      "triggers": 2,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "Write a complete test suite for our UserAuthentication class — unit tests, integration tests, coverage above 90%. This needs to be thorough.",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "我在设计一个任务队列的状态机，pending → running → paused → completed → failed。在我正式写之前，你能搭个原型让我在终端里跑跑看吗？我担心 pause 期间的 retry 边界情况会出问题。",
+      "should_trigger": true,
+      "trigger_rate": 0.3333333333333333,
+      "triggers": 1,
+      "runs": 3,
+      "pass": false
+    },
+    {
+      "query": "Can you plan out the architecture for our new microservice? I need deployment diagrams, data flow, API contracts, and a detailed implementation roadmap. No code yet, just the design doc.",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "I want to add dark mode support to our entire app. This needs to be done properly — CSS variables, system preference detection, persistent user preference, smooth transitions. Real implementation, not a demo.",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "Can you review this PR? It's a major refactor of the authentication layer and I want to make sure nothing is broken before merging to main.",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "Our CI pipeline takes 25 minutes. Can you analyze the build times, identify the slowest steps, and optimize the Docker layer caching and test parallelization? This is real infra work.",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "帮我们新的微服务画一下架构图，要有部署拓扑、数据流、API 契约和详细的实施路线图。先不要写代码，就出设计文档。",
+      "should_trigger": false,
+      "trigger_rate": 0.3333333333333333,
+      "triggers": 1,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "付款模块老是在边界情况报错——部分退款、汇率换算精度、pro_rata 计算。逻辑在 pro_rata.py 这个文件里，你帮我找到然后 debug 一下到底哪里算错了。",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "线上用户会随机被踢出登录，你帮我顺着 session 管理的代码 trace 一下，找到根因然后修好。",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "给新功能搭数据库 schema——要 migration 文件、索引、ORM model，直接上生产环境所以约束和回滚方案都得写全。",
+      "should_trigger": false,
+      "trigger_rate": 0.3333333333333333,
+      "triggers": 1,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "帮我把通知服务重构一下，现在一个类两千行了。拆成独立的关注点，加好接口，确保现有的四十七个测试全部通过。",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 3,
+      "pass": true
+    },
+    {
+      "query": "I'm designing a rate limiter with sliding window + token bucket + concurrent request limits all interacting. My brain can't hold all the edge cases at once — can you build a quick interactive simulation where I can fire requests and watch the limiter state?",
+      "should_trigger": true,
+      "trigger_rate": 0.6666666666666666,
+      "triggers": 2,
+      "runs": 3,
+      "pass": true
+    }
+  ]
+}

@@ -101,3 +101,23 @@ You: [Fix progress indicators]
 - Request clarification
 
 taurus writes its full review to `docs/superpowers/reviews/<task>-quality.md`. Read the file for detail.
+
+**4. Optional: Over-Engineering Audit (dispatch aquarius)**
+
+After taurus approves, consider an adversarial pass with a different lens: not "is this code good?" but "does this code need to exist at all?" Dispatch **aquarius**. This is NOT a second code-quality review — it's a deletion audit. aquarius climbs the same decision ladder used in `writing-plans`, but applied in reverse: the code already exists, and the question is whether it should.
+
+**When to dispatch:**
+- The diff is larger than expected for the task
+- New dependencies appeared (`npm install`, `pip install`)
+- Code reinvents something the standard library or codebase already has
+- A "simple" task produced a surprisingly large change
+
+```
+run_skill({name: "aquarius", arguments: "Existence audit: <task summary>\n\nAudit BASE <BASE_SHA> HEAD <HEAD_SHA>. Read the right lens ref for this kind of target, then tag everything that shouldn't exist. Write to docs/superpowers/reviews/<task>-overengineering.md."})
+```
+
+aquarius writes to `docs/superpowers/reviews/<task>-overengineering.md`. Read it.
+
+**If aquarius found dead code:** route back to capricorn for deletion. These are surgical cuts — each finding says exactly what to delete and what replaces it.
+
+**If aquarius says "Lean. Ship.":** the code survived adversarial deletion review. Proceed.
