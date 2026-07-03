@@ -226,10 +226,8 @@ aquarius writes its verdict to `docs/superpowers/reviews/<plan-name>-adversarial
 **Pass 2 — libra (task decomposition gate).** libra is the final checkpoint — the implementer's advocate. Aquarius already confirmed the design is logically sound. libra checks only one thing: can a fresh implementer with zero context actually execute these tasks?
 
 ```
-run_skill({name: "libra", arguments: "Review plan task decomposition: <filename>\n\nReview the plan at docs/superpowers/plans/<filename>.md. Read its referenced spec for context. Check ONLY task decomposition: (1) Can each task be started without guessing? (2) Are task boundaries sensible — not a grab-bag of unrelated changes? (3) Are dependencies between tasks stated? (4) Any placeholders or TODOs? (5) Do referenced files exist? Do NOT re-check design logic — aquarius already approved that."})
+run_skill({name: "libra", arguments: "Review plan task decomposition: <filename>\n\nReview the plan at docs/superpowers/plans/<filename>.md. Read its referenced spec for context. Check ONLY task decomposition: (1) Can each task be started without guessing? (2) Are task boundaries sensible — not a grab-bag of unrelated changes? (3) Are dependencies between tasks stated? (4) Any placeholders or TODOs? (5) Do referenced files exist? Do NOT re-check design logic — aquarius already approved that.\n\nWrite your verdict to docs/superpowers/reviews/<plan-name>-plan-review.md."})
 ```
-
-libra writes its verdict to `docs/superpowers/reviews/<plan-name>-plan-review.md`. Read it.
 
 **If libra finds blockers:** fix the plan, then re-dispatch libra (it re-reads from disk — don't summarize the changes, just fix the file and re-dispatch). If the fixes are substantial, consider re-dispatching aquarius — major rewrites can introduce new assumptions.
 

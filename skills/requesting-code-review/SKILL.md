@@ -36,7 +36,7 @@ HEAD_SHA=$(git rev-parse HEAD)
 taurus is the dedicated code-quality agent — its discipline (Strengths / Issues by severity / Assessment, every issue citing file:line) is baked into its definition. Dispatch it bare:
 
 ```
-run_skill({name: "taurus", arguments: "Code quality review: <task summary>\n\nReview BASE <BASE_SHA> HEAD <HEAD_SHA>.\nPlan/requirements: <PLAN_OR_REQUIREMENTS or path>"})
+run_skill({name: "taurus", arguments: "Code quality review: <task summary>\n\nReview BASE <BASE_SHA> HEAD <HEAD_SHA>.\nPlan/requirements: <PLAN_OR_REQUIREMENTS or path>\n\nWrite your review to docs/superpowers/reviews/<task>-quality.md."})
 ```
 
 taurus reads the diff itself — no need to paste code or fill a template. Pass only the git range and what the work was supposed to do.
