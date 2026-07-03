@@ -223,10 +223,10 @@ aquarius writes its verdict to `docs/superpowers/reviews/<plan-name>-adversarial
 
 **If aquarius says "Lean. Ship.":** proceed to Pass 2.
 
-**Pass 2 — libra (completeness gate).** libra is the final checkpoint — the last pair of eyes before capricorn starts building. Only dispatch after aquarius has confirmed the plan is logically sound. libra checks for blocking gaps; its default is APPROVE.
+**Pass 2 — libra (task decomposition gate).** libra is the final checkpoint — the implementer's advocate. Aquarius already confirmed the design is logically sound. libra checks only one thing: can a fresh implementer with zero context actually execute these tasks?
 
 ```
-run_skill({name: "libra", arguments: "Review plan: <filename>\n\nReview the plan at docs/superpowers/plans/<filename>.md against its spec at <spec path>. Flag only blockers — missing spec requirements, contradictions, placeholder content, or tasks too vague to act on."})
+run_skill({name: "libra", arguments: "Review plan task decomposition: <filename>\n\nReview the plan at docs/superpowers/plans/<filename>.md. Read its referenced spec for context. Check ONLY task decomposition: (1) Can each task be started without guessing? (2) Are task boundaries sensible — not a grab-bag of unrelated changes? (3) Are dependencies between tasks stated? (4) Any placeholders or TODOs? (5) Do referenced files exist? Do NOT re-check design logic — aquarius already approved that."})
 ```
 
 libra writes its verdict to `docs/superpowers/reviews/<plan-name>-plan-review.md`. Read it.
