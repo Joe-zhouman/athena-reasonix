@@ -90,10 +90,17 @@ Based on what the task needs and what you already know, decide:
 
 Do NOT auto-dispatch both for every task. Virgo and sagittarius cost a round-trip each; only spend them when the gap is real.
 
+**When you dispatch sagittarius, tag the tier.** sagittarius runs two modes — `quick` (1-2 sources, compressed finding) or `deep` (full multi-source research) — and self-routes by the tag. Putting the tag in the dispatch is what makes a one-line lookup not take half an hour. Decide:
+- **`quick`** — single fact / one API's usage / config value / "how do I do X in library Y" — answerable from 1-2 authoritative sources
+- **`deep`** — survey / methodology / contested or time-sensitive claims / "what does the literature say" / open-ended "tell me about X"
+- Unsure → default **`quick`** (it's the reversible tier; a quick hunt that needs depth escalates on its own)
+
 ```
 run_skill({name: "virgo", arguments: "Map <area> for <task>\n\n<What map do you need? e.g. 'Trace the auth flow: where login is handled, how sessions are persisted, what middleware checks them. Anchor every claim to file:line. Deliver a structured findings block.'>"})
 
-run_skill({name: "sagittarius", arguments: "Research <library/topic>\n\n<What do you need to know? e.g. 'How does library X handle Y? Cite primary sources, signal confidence. Deliver a structured findings block (with citations and confidence). If you found stale entries, include a corrections block.'>"})
+run_skill({name: "sagittarius", arguments: "Tier: quick.\n\n<What do you need to know? e.g. 'How do I configure X in library Y?' — one authoritative source is enough; deliver a compressed finding (answer + source + confidence).>"})
+
+run_skill({name: "sagittarius", arguments: "Tier: deep.\n\n<What do you need to know? e.g. 'What are the trade-offs between approaches A, B, C for X?' Cite primary sources, signal confidence. Deliver a structured findings block (with citations and confidence). If you found stale entries, include a corrections block.>"})
 ```
 
 When both are dispatched, do it in a single message with two `run_skill` calls so they run concurrently.
